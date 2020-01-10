@@ -15,7 +15,7 @@ peopleContainer.addEventListener('keyup', ({target}) => {
   
   const filteredList = {
     results: people.results.filter( person => {
-      return person.name.toUpperCase().includes(target.value.toUpperCase());
+      return person.name.toUpperCase().includes(target.value.toUpperCase().trim());
     })
   }
 
@@ -29,22 +29,64 @@ peopleContainer.addEventListener('keyup', ({target}) => {
   });
 })
 
-const rerender = (endpoint, data, itemRenderer)=> {
-  const ul = document.querySelector(`#${endpoint}List`);
-  let html = data.results.map( item => {
-    return `
-      <li>
-        ${ itemRenderer( item )}
-      </li>
-    `;
-  }).join('');
-  
-  ul.innerHTML = html;
-};
+
 
 const filmsContainer = document.querySelector('#films');
-const vehiclesContainer = document.querySelector('#vehicle');
+filmsContainer.addEventListener('keyup', ({target}) => {
+  
+  const filteredList = {
+    results: films.results.filter( film => {
+      return film.title.toUpperCase().includes(target.value.toUpperCase().trim());
+    })
+  }
+
+  console.log(filteredList);
+  rerender('films', filteredList, (film)=> {
+    return `
+      <b>${ film.title }</b>
+      <br />
+      Released On ${ ['Su', 'Mo', 'Tues', 'Wed', 'Thurs', 'Friday', 'Sat'][((new Date(film.release_date)).getDay())] } ${ film.release_date}
+    `;
+  });
+})
+
+const vehiclesContainer = document.querySelector('#vehicles');
+vehiclesContainer.addEventListener('keyup', ({target}) => {
+  
+  const filteredList = {
+    results: vehicles.results.filter( vehicle => {
+      return vehicle.name.toUpperCase().includes(target.value.toUpperCase().trim());
+    })
+  }
+
+  console.log(filteredList);
+  rerender('vehicles', filteredList, (vehicle)=> {
+    return `
+      ${ vehicle.name }
+      <br />
+      ${ vehicle.manufacturer }
+    `;
+  });
+})
+
 const starshipsContainer = document.querySelector('#starships');
+starshipsContainer.addEventListener('keyup', ({target}) => {
+  
+  const filteredList = {
+    results: starships.results.filter( starship => {
+      return starship.name.toUpperCase().includes(target.value.toUpperCase().trim());
+    })
+  }
+
+  console.log(filteredList);
+  rerender('starships', filteredList, (starship)=> {
+    return `
+      ${ starship.name }
+      <br />
+      ${ starship.manufacturer }
+    `;
+  });
+})
 
 const renderData = (endpoint, data, itemRenderer)=> {
   const div = document.querySelector(`#${ endpoint }`);
@@ -59,6 +101,19 @@ const renderData = (endpoint, data, itemRenderer)=> {
           <input type = 'text'/>
           <ul id = '${endpoint}List'>${html}</ul>`;
   div.innerHTML = html;
+};
+
+const rerender = (endpoint, data, itemRenderer)=> {
+  const ul = document.querySelector(`#${endpoint}List`);
+  let html = data.results.map( item => {
+    return `
+      <li>
+        ${ itemRenderer( item )}
+      </li>
+    `;
+  }).join('');
+  
+  ul.innerHTML = html;
 };
 
 const renderPeople = (people)=> {
