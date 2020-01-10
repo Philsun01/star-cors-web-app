@@ -26,7 +26,7 @@ peopleContainer.addEventListener('keyup', ({target}) => {
         <br />
         Has appeared in ${ person.films.length } films.
     `;
-  });
+  }, people.results.length);
 })
 
 
@@ -47,7 +47,7 @@ filmsContainer.addEventListener('keyup', ({target}) => {
       <br />
       Released On ${ ['Su', 'Mo', 'Tues', 'Wed', 'Thurs', 'Friday', 'Sat'][((new Date(film.release_date)).getDay())] } ${ film.release_date}
     `;
-  });
+  },films.results.length);
 })
 
 const vehiclesContainer = document.querySelector('#vehicles');
@@ -66,7 +66,7 @@ vehiclesContainer.addEventListener('keyup', ({target}) => {
       <br />
       ${ vehicle.manufacturer }
     `;
-  });
+  },vehicles.results.length);
 })
 
 const starshipsContainer = document.querySelector('#starships');
@@ -85,12 +85,13 @@ starshipsContainer.addEventListener('keyup', ({target}) => {
       <br />
       ${ starship.manufacturer }
     `;
-  });
+  },starships.results.length);
 })
 
 const renderData = (endpoint, data, itemRenderer)=> {
   const div = document.querySelector(`#${ endpoint }`);
-  let html = data.results.map( item => {
+  let html = `Viewing ${data.results.length} out of ${data.results.length} ${endpoint}` 
+    + data.results.map( item => {
     return `
       <li>
         ${ itemRenderer( item )}
@@ -103,7 +104,7 @@ const renderData = (endpoint, data, itemRenderer)=> {
   div.innerHTML = html;
 };
 
-const rerender = (endpoint, data, itemRenderer)=> {
+const rerender = (endpoint, data, itemRenderer, total)=> {
   const ul = document.querySelector(`#${endpoint}List`);
   let html = data.results.map( item => {
     return `
@@ -113,7 +114,7 @@ const rerender = (endpoint, data, itemRenderer)=> {
     `;
   }).join('');
   
-  ul.innerHTML = html;
+  ul.innerHTML = `Viewing ${data.results.length} out of ${total} ${endpoint}` +html;
 };
 
 const renderPeople = (people)=> {
