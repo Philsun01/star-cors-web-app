@@ -8,6 +8,44 @@ const promises = urls.map( url => {
     .then( response => response.json())
 });
 
+let people, films, vehicles, starships;
+
+const peopleContainer = document.querySelector('#people');
+peopleContainer.addEventListener('keyup', ({target}) => {
+  
+  const filteredList = {
+    results: people.results.filter( person => {
+      return person.name.toUpperCase().includes(target.value.toUpperCase());
+    })
+  }
+
+  console.log(filteredList);
+  rerender('people', filteredList, function(person){
+    return `
+        The name is: ${ person.name }
+        <br />
+        Has appeared in ${ person.films.length } films.
+    `;
+  });
+})
+
+const rerender = (endpoint, data, itemRenderer)=> {
+  const ul = document.querySelector(`#${endpoint}List`);
+  let html = data.results.map( item => {
+    return `
+      <li>
+        ${ itemRenderer( item )}
+      </li>
+    `;
+  }).join('');
+  
+  ul.innerHTML = html;
+};
+
+const filmsContainer = document.querySelector('#films');
+const vehiclesContainer = document.querySelector('#vehicle');
+const starshipsContainer = document.querySelector('#starships');
+
 const renderData = (endpoint, data, itemRenderer)=> {
   const div = document.querySelector(`#${ endpoint }`);
   let html = data.results.map( item => {
@@ -17,7 +55,9 @@ const renderData = (endpoint, data, itemRenderer)=> {
       </li>
     `;
   }).join('');
-  html = `<h2>${endpoint}</h2><ul>${html}</ul>`;
+  html = `<h2>${endpoint}</h2>
+          <input type = 'text'/>
+          <ul id = '${endpoint}List'>${html}</ul>`;
   div.innerHTML = html;
 };
 
@@ -79,7 +119,7 @@ const renderStarships = (starships)=> {
 
 Promise.all(promises)
   .then( result => {
-    const [ people, films, vehicles, starships ] = result;
+    [ people, films, vehicles, starships ] = result;
     renderPeople(people);
     renderFilms(films);
     renderVehicles(vehicles);

@@ -26,3 +26,10 @@ li {
 h2 {
   text-transform: uppercase;
 }
+
+input {
+  height: 2rem;
+  width: 80%;
+  margin-left: 1rem;
+  
+}
